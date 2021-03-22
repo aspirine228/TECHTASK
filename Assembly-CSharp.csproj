@@ -69,7 +69,6 @@
     <Compile Include="Assets\Scripts\MissionType.cs" />
     <Compile Include="Assets\Scripts\Missions.cs" />
     <Compile Include="Assets\Scripts\MissionsData.cs" />
-    <Compile Include="Assets\Scripts\ParserInfo.cs" />
     <Compile Include="Assets\Scripts\PlayerGems.cs" />
     <Compile Include="Assets\Scripts\PlayerScript.cs" />
     <Reference Include="Unity.Timeline.Editor">

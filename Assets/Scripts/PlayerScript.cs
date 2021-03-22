@@ -5,11 +5,11 @@ using System;
 [System.Serializable]
 public class PlayerScript : MonoBehaviour
 {
-    // Start is called before the first frame update
+   
     public int health = 5;
     public static int gems = 0;
     public MissionsData missions;
-    public void TakeReward()
+    public void TakeReward() //да , я тут почему-то работаю с именами объектов ,вместо их айди из списка. мне было так удобнее (
     {
         //GameObject obj = new GameObject();
         if (missions.missionsList[Convert.ToInt32(gameObject.name)].goal.IsReached())
@@ -21,10 +21,6 @@ public class PlayerScript : MonoBehaviour
 
                 missions.missionsList[Convert.ToInt32(gameObject.name)].GainReward();
             }
-
-
         }
-
-
     }
 }

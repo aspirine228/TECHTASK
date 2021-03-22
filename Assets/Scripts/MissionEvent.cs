@@ -6,36 +6,13 @@ using UnityEngine.UI;
 public class MissionEvent : MonoBehaviour
 {
     
-    private void Update()
-    {
-
-        if (missions.missionsList[Missions.progress].goal.IsChanged()==true  )  // SHOWS NEXT MISSION GOAL AS EVENT
-        {
-            descipteven.text= missions.missionsList[Missions.progress].description.ToString();
-            currentvalue.text = missions.missionsList[Missions.progress].goal.currentAmount.ToString();
-            requiredvaluse.text = missions.missionsList[Missions.progress].goal.requiredAmount.ToString();
-
-
-            missionEvent.SetActive(true);
-            missions.missionsList[Missions.progress].goal.trigger = false;
-            missions.missionsList[Missions.progress].SetSTATE();
-
-              StartCoroutine(EventTimer(3));
-        }
-        else if(missions.missionsList[Missions.progress].goal.IsReached())
-        {
-            missions.missionsList[Missions.progress].RewardReady = true;
-            missions.missionsList[Missions.progress].isActive = false; 
-            Missions.progress++; 
-            missions.missionsList[Missions.progress].isActive = true;
-            
-        }
-    }
+  
     private void Start()
     {
-        missions.missionsList[Missions.progress].isActive = true;
+
         missions.setid();
         missions.SetState();
+        missions.missionsList[missions.Currentid].isActive = true;
     }
     // public Missions mission;
 
@@ -55,15 +32,44 @@ public class MissionEvent : MonoBehaviour
     public Text goalCurrenttxt;
     public Text goalRequiredtxt;
     public Text rewardtxt;
+    public void UpdateInfo()
+    {
+       missions.missionsList[missions.Currentid].isActive = true;
+       missions.setid();
+       missions.SetState();
+        if (missions.missionsList[missions.Currentid].goal.IsChanged() == true)  // SHOWS NEXT MISSION GOAL AS EVENT
+        {
+            descipteven.text = missions.missionsList[missions.Currentid].description.ToString();
+            currentvalue.text = missions.missionsList[missions.Currentid].goal.currentAmount.ToString();
+            requiredvaluse.text = missions.missionsList[missions.Currentid].goal.requiredAmount.ToString();
+
+
+            missionEvent.SetActive(true);
+            missions.missionsList[missions.Currentid].goal.trigger = false;
+            missions.missionsList[missions.Currentid].SetSTATE();
+
+            StartCoroutine(EventTimer(3));
+        }
+        else if (missions.missionsList[missions.Currentid].goal.IsReached())
+        {
+            missions.missionsList[missions.Currentid].RewardReady = true;
+            missions.missionsList[missions.Currentid].isActive = false;
+            missions.Currentid++;
+            missions.missionsList[missions.Currentid].isActive = true;
+            StartCoroutine(EventTimer(3));
+        }
+    }
     public void Kill()
     {
-        if(missions.missionsList[Missions.progress].type== Type.Kill)
-        missions.missionsList[Missions.progress].goal.EnemyKilled();
+        if (missions.missionsList[missions.Currentid].type == Type.Kill)
+        { missions.missionsList[missions.Currentid].goal.DoMission(); }
+        UpdateInfo();
     }
     public void Collect()
     {
-        if (missions.missionsList[Missions.progress].type == Type.Collect)
-            missions.missionsList[Missions.progress].goal.ItemCollected();
+        if (missions.missionsList[missions.Currentid].type == Type.Collect)
+        { missions.missionsList[missions.Currentid].goal.DoMission(); }
+        UpdateInfo();
     }
    
     public void ShowAll()  //shows pannel with list of missions
@@ -80,11 +86,10 @@ public class MissionEvent : MonoBehaviour
             obj.transform.FindChild("Text").GetComponentInParent<Text>().text = missions.missionsList[i].state.ToString();
         }
     }
-    public void OnDestroys()
+    public void OnDestroys() //тут я пытаюсь уничтожить префабы миссий ,потому при открытии списка миссиий они создаются заново ,но они не уничтожаются ( 
     {
-        
         for (int i = 0; i < missions.missionsList.Count; i++)
-        { GameObject obj = new GameObject();
+        { GameObject obj ;
             obj  = allMissions.transform.FindChild("Panel").GetComponentInChildren<Button>().gameObject;
             Destroy(obj);
            
@@ -93,24 +98,22 @@ public class MissionEvent : MonoBehaviour
     }
     public void ShowMission() //show pannel with current mission
     {
-     
-      missionInfo.SetActive(true);
-      titiletxt.text = missions.missionsList[Missions.progress].title;
-      descriptiontxt.text = missions.missionsList[Missions.progress].description;
-      goalCurrenttxt.text = missions.missionsList[Missions.progress].goal.currentAmount.ToString();
-      goalRequiredtxt.text = missions.missionsList[Missions.progress].goal.requiredAmount.ToString();
-      rewardtxt.text = missions.missionsList[Missions.progress].rewardamount.ToString();
+        //UpdateInfo();
+        missionInfo.SetActive(true);
+      titiletxt.text = missions.missionsList[missions.Currentid].title;
+      descriptiontxt.text = missions.missionsList[missions.Currentid].description;
+      goalCurrenttxt.text = missions.missionsList[missions.Currentid].goal.currentAmount.ToString();
+      goalRequiredtxt.text = missions.missionsList[missions.Currentid].goal.requiredAmount.ToString();
+      rewardtxt.text = missions.missionsList[missions.Currentid].rewardamount.ToString();
     }
 
 
     IEnumerator EventTimer(float timeInSec)  // timer for envent of ending mission
     {
-
         yield return new WaitForSeconds(timeInSec);
         //сделать нужное
         missionEvent.SetActive(false);
         missions.SetState();
-        
-
+        UpdateInfo();
     }
 }

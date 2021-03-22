@@ -21,7 +21,7 @@ public abstract class Missions: ScriptableObject
 
     public bool RewardReady;
     public int rewardamount;
-    public static int progress=0; //progress that shows id of current mission 
+  //  public int CurrentId; //progress that shows id of current mission 
 
     public Goal goal;
 
@@ -31,42 +31,17 @@ public abstract class Missions: ScriptableObject
 
     public abstract void SetInfo();
 
+    public abstract void SetSTATE();
 
+    public abstract void ShowMissionDesc();
 
     public void GainReward()
     {
         RewardReady = false;
         Debug.Log("reward was taken");
     }
-    public void SetSTATE()
-    {
-
-        if (isActive == true & goal.currentAmount != goal.requiredAmount)
-        {
-             state = missionState.InProgress;
-        }
-        else if (goal.currentAmount==goal.requiredAmount)
-        {
-            state = missionState.Complited;
-        }
-        else if (MissionId>Missions.progress+1)
-        {
-            state = missionState.Claimed;
-        }
-        else { state = missionState.Upcoming; }
-    }
-    public void ShowMission()
-    {
-        if (type == Type.Kill)
-        {
-            description = "Kill " + goal.requiredAmount + " Zombies";  //for example zomboies
-        }
-
-        if (type == Type.Collect)
-        {
-            description = "Collect " + goal.requiredAmount + " Gems"; //for example gems
-        }
-    }
+    
+    
   //  public missionState state;
 
    
